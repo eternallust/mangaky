@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken')
 
 const models = require('../models')
-const user = models.user
+const user = models.users
 
 exports.show = async(req,res) =>{
     const users = await user.findAll()
