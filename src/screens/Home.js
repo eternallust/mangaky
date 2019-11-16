@@ -4,9 +4,13 @@ import { Item, Input,Header,Icon} from 'native-base';
 import { ScrollView } from 'react-native-gesture-handler';
 import ImageSlider from 'react-native-image-slider';
 
+import {connect} from 'react-redux'
+import * as actionManga from '../redux/actions/actionManga'
+
 const maxWidthScreen = Dimensions.get('window').width;
 const maxHeightScreen = Dimensions.get('window').height;
-export default class Home extends Component {
+
+class Home extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -28,6 +32,10 @@ export default class Home extends Component {
 
   goToAllMangaScreen = () =>{
     this.props.navigation.navigate('AllMangas')
+  }
+
+  componentDidMount = () => {
+    this.props.getAllManga()
   }
 
   render() {
@@ -98,12 +106,12 @@ export default class Home extends Component {
               <FlatList
             showsHorizontalScrollIndicator ={false}
             numColumns={3}
-            data={this.state.dummyAllData}
+            data={this.props.mangaLocal.manga.slice(0,6)}
             renderItem={({item})=>
             <View style={{marginRight:10}}>
               <View style={{height:maxHeightScreen*0.2,}}>
                 <Image 
-                  source={item.image}
+                  source={item.cover}
                   style={styles.coverManga}
                 />
               </View>
@@ -211,3 +219,18 @@ const styles = StyleSheet.create({
     width:maxWidthScreen*0.90
   }
 })
+
+const mapStateToProps = state => {
+  return {
+    mangaLocal: state.manga // reducers/index.js
+  }
+}
+const mapDispatchToProps = dispatch => {
+  return {
+    getAllManga: () => dispatch(actionManga.getAllManga())
+  }
+}
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Home);

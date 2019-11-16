@@ -23,6 +23,9 @@ module.exports = {
       cover: {
         type: Sequelize.STRING
       },
+      genre: {
+        type: Sequelize.STRING
+      },
       synopsis:{
         type: Sequelize.TEXT
       },

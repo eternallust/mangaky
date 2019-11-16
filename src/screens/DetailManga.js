@@ -5,7 +5,10 @@ import { Item, Input,Header,Icon} from 'native-base';
 const maxWidthScreen = Dimensions.get('window').width;
 const maxHeightScreen = Dimensions.get('window').height;
 
-export default class DetailManga extends Component {
+import {connect} from 'react-redux'
+import * as actionManga from '../redux/actions/actionManga'
+
+class DetailManga extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -14,6 +17,12 @@ export default class DetailManga extends Component {
 
   goToMangaChapterScreen = () => {
     this.props.navigation.navigate('MangaChapter')
+  }
+
+  componentDidMount = () => {
+    const mangaId = this.props.navigation.state.params
+    this.props.getDetailManga(mangaId)
+    console.log(this.props.mangaLocal.detailManga.title)
   }
 
   render() {
@@ -34,15 +43,14 @@ export default class DetailManga extends Component {
                   <View style={{height:maxHeightScreen*0.35,}}>
                     <Image
                     style={styles.cover} 
-                    source={require('./../assets/cover/cover_dummy.jpg')}
+                    source={this.props.mangaLocal.detailManga.cover}
                     ></Image>
                   </View>
-                  <View style={{height:maxHeightScreen*0.07,alignItems:'center',justifyContent:'center'}}>
-                      <Text style={{fontSize:17,color:'#192a56',fontWeight:'bold'}}>DIGINIFIED ASLEEP SAEKI</Text>
+                  <View style={styles.textTitle}>
+                      <Text style={styles.valueTitle}>{this.props.mangaLocal.detailManga.title}</Text>
                   </View>
                   <View style={{height:maxHeightScreen*0.25}}>
-                      <Text>The class representative, Saeki, uses an array of tactics to sleep during class. Tokimiya, the boy sitting next to her, tends to observe her different tactics and while doing so his interest begins to shift...
-                        In other words, Saeki wants to sleep.</Text>
+                    <Text>{this.props.mangaLocal.detailManga.synopsis}</Text>
                   </View>
                   <View style={{height:maxHeightScreen*0.08,alignItems:'center',justifyContent:'center'}}>
                     <TouchableOpacity style={styles.buttonLogin} onPress={this.goToMangaChapterScreen}>
@@ -108,6 +116,32 @@ const styles = StyleSheet.create({
       height:maxHeightScreen*0.35,
       borderRadius:5,alignSelf:'center',
       width:maxWidthScreen*0.4
+    },
+    textTitle:{
+      height:maxHeightScreen*0.07,
+      alignItems:'center',
+      justifyContent:'center'
+    },
+    valueTitle: {
+      fontSize:17,
+      color:'#192a56',
+      fontWeight:'bold'
     }
 
+
   })
+
+  const mapStateToProps = state => {
+    return {
+      mangaLocal: state.manga // reducers/index.js
+    }
+  }
+  const mapDispatchToProps = dispatch => {
+    return {
+      getDetailManga: (mangaId) => dispatch(actionManga.getDetailManga(mangaId))
+    }
+  }
+  export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )(DetailManga);

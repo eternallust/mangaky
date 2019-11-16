@@ -1,12 +1,15 @@
 import React, { Component } from 'react';
-import { View, Text, Dimensions,StyleSheet,Image,FlatList,TouchableOpacity } from 'react-native';
+import { View, Text, Dimensions,StyleSheet,Image,FlatList,TouchableOpacity,AsyncStorage } from 'react-native';
 import { Item, Input,Header,Icon} from 'native-base';
+import jwt_decode from 'jwt-decode';
 
+import {connect} from 'react-redux'
+import * as actionFavorite from '../redux/actions/actionFavorite'
 
 const maxWidthScreen = Dimensions.get('window').width;
 const maxHeightScreen = Dimensions.get('window').height;
 
-export default class Favorites extends Component {
+class Favorites extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -20,6 +23,14 @@ export default class Favorites extends Component {
     
       goToDetailManga = () => {
           this.props.navigation.navigate('DetailManga')
+      }
+      
+      componentDidMount = async() => {
+        const token = await AsyncStorage.getItem('user-token')
+        const data = jwt_decode(token)
+        const userId = data.userId
+        await this.props.getUserFavorite(userId)
+        console.log(this.props.favoriteLocal.userFavorite)
       }
 
       render() {
@@ -39,17 +50,17 @@ export default class Favorites extends Component {
                     <Text style={{color:'#192a56',width:'100%',height:'7%',fontSize:17, fontWeight:'bold'}}>My Favorite Mangas</Text>
                     <FlatList
                         style={{height:'93%',width:'100%'}}
-                        data={this.state.dummyData}
+                        data={this.props.favoriteLocal.userFavorite}
                         numColumns={3}
                         renderItem={({item})=>
                         <TouchableOpacity>
                         
                         <Image 
-                            source={item.image}
+                            source={item.cover}
                             style={{width:maxWidthScreen*0.28,height:maxHeightScreen*0.2,borderRadius:3,marginRight:10}}
                         />
                         <View style={{height:maxHeightScreen*0.05,width:maxWidthScreen*0.27}}>
-                            <Text numberOfLines={1}>{item.title}</Text>
+                            <Text numberOfLines={1}>{item.mangas.title}</Text>
                         </View>
                         </TouchableOpacity>
                     }
@@ -85,3 +96,19 @@ const styles = StyleSheet.create({
       backgroundColor:'white'
     },
 })
+
+const mapStateToProps = state => {
+  return {
+    favoriteLocal: state.favorite // reducers/index.js
+  }
+}
+const mapDispatchToProps = dispatch => {
+  return {
+    getUserFavorite: (userId) => dispatch(actionFavorite.getUserFavorite(userId))
+  }
+}
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Favorites);

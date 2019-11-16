@@ -1,1 +1,11 @@
 export const LOGIN = 'LOGIN'
+
+export const MANGA = 'MANGA'
+export const DETAILMANGA = 'DETAILMANGA'
+
+export const CHAPTERMANGA = 'CHAPTERMANGA'
+
+export const ADDFAVORITE = 'ADDFAVORITE'
+export const DETAILFAVORITE = 'DETAILFAVORITE'
+export const DELETEFAVORITE = 'DELETEFAVORITE'
+export const USERFAVORITE = 'USERFAVORITE'

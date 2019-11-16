@@ -20,6 +20,9 @@ module.exports = {
       chapter_name: {
         type: Sequelize.STRING
       },
+      number_chapter: {
+        type: Sequelize.INTEGER
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE
@@ -27,7 +30,8 @@ module.exports = {
       updatedAt: {
         allowNull: false,
         type: Sequelize.DATE
-      }
+      },
+      
     });
   },
   down: (queryInterface, Sequelize) => {

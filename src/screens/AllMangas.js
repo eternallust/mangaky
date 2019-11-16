@@ -2,12 +2,12 @@ import React, { Component } from 'react';
 import { View, Text, Dimensions,StyleSheet,Image,FlatList,TouchableOpacity } from 'react-native';
 import { Item, Input,Header,Icon} from 'native-base';
 
-
+import {connect} from 'react-redux'
 
 const maxWidthScreen = Dimensions.get('window').width;
 const maxHeightScreen = Dimensions.get('window').height;
 
-export default class AllMangas extends Component {
+class AllMangas extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -23,8 +23,8 @@ export default class AllMangas extends Component {
     };
   }
 
-  goToDetailManga = () => {
-      this.props.navigation.navigate('DetailManga')
+  goToDetailManga = (mangaId) => {
+      this.props.navigation.navigate('DetailManga',mangaId)
   }
 
   render() {
@@ -48,15 +48,15 @@ export default class AllMangas extends Component {
               <FlatList
               showsHorizontalScrollIndicator ={false}
               numColumns={3}
-              data={this.state.dummyData}
+              data={this.props.mangaLocal.manga}
               renderItem={({item})=>
                 <TouchableOpacity 
                 style={{marginRight:10}}
-                onPress={()=>this.goToDetailManga()}
+                onPress={()=>this.goToDetailManga(item.id)}
                 >
                   <View style={{height:maxHeightScreen*0.2,}}>
                     <Image 
-                      source={item.image}
+                      source={item.cover}
                       style={styles.coverManga}
                     />
                   </View>
@@ -121,3 +121,18 @@ const styles = StyleSheet.create({
     }
 
   })
+
+  const mapStateToProps = state => {
+    return {
+      mangaLocal: state.manga // reducers/index.js
+    }
+  }
+  const mapDispatchToProps = dispatch => {
+    return {
+     
+    }
+  }
+  export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )(AllMangas);

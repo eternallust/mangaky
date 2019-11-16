@@ -1,15 +1,29 @@
 import React, { Component } from 'react';
-import { View, Text,ImageBackground,Image,TouchableOpacity,StyleSheet } from 'react-native';
+import { View, Text,ImageBackground,Image,TouchableOpacity,StyleSheet,AsyncStorage } from 'react-native';
 import { Item, Input,} from 'native-base';
-export default class Login extends Component {
+import jwt_decode from 'jwt-decode';
+
+import * as actionAuthentication from '../redux/actions/actionAuthentication'
+import {connect} from 'react-redux'
+
+class Login extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      inputUsername:'',
+      inputPassword:''
     };
   }
 
-  login = () => {
-    this.props.navigation.navigate('MainApp')
+  login = async() => {
+    await this.props.authentication(
+      this.state.inputUsername,
+      this.state.inputPassword
+    )
+      const data = this.props.authenticationLocal.user.token
+      await AsyncStorage.setItem('user-token',data)
+      this.props.navigation.navigate('MainApp')
+   
   }
 
   render() {
@@ -28,12 +42,14 @@ export default class Login extends Component {
                 style={{fontSize:14,marginLeft:10,color:'white'}}
                 placeholderTextColor='white'
                 placeholder='Input Your Email'
+                onChangeText={(text) => this.setState({ inputUsername: text })}
               >
               </Input>
             </Item>
             <Item rounded style={{width:'80%',height:'8%',marginTop:10,backgroundColor:'#0652DD98',borderColor:'#0652DD98'}}>
               <Input
-                style={{fontSize:14,marginLeft:10}}
+                onChangeText={(text) => this.setState({ inputPassword: text })}
+                style={{fontSize:14,marginLeft:10,color:'white'}}
                 placeholderTextColor='white'
                 placeholder='Input Your Password'
               >
@@ -87,5 +103,18 @@ const styles = StyleSheet.create({
     width: '80%',
     marginTop:10
   }
-
 })
+const mapStateToProps = state => {
+  return {
+    authenticationLocal: state.authentication // reducers/index.js
+  }
+}
+const mapDispatchToProps = dispatch => {
+  return {
+    authentication: (inputUsername,inputPassword) => dispatch(actionAuthentication.login(inputUsername,inputPassword))
+  }
+}
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Login);
