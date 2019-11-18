@@ -54,7 +54,7 @@ class MangaChapter extends Component {
     var mo = ["JAN", "FEB", "MAR", "APR", "May", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
     var string =`${dt.getDate()} ${mo[dt.getMonth()]} ${dt.getFullYear()}`
     return string;
-}
+  }
   goToReadManga = () => {
     this.props.navigation.navigate('ReadManga')
   }

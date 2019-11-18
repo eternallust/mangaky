@@ -31,22 +31,19 @@ exports.searchManga = async(req,res) => {
     res.send(result);
 }
 exports.addManga = async (req,res) => {
-    const {userId} = req.params
-    const {title,genre,cover,synopsis} = req.body
+    const {title,user_id} = req.body
     const result = await manga.create({
         title,
-        genre,
-        cover,
-        synopsis,
+        cover: req.file.path,
         status: 1,
-        user_id : userId
+        user_id
     })
     res.send(result)
 }
 exports.updateManga = async (req,res) => {
     const mangaId = req.params.mangaId
     const data = req.body
-    const result = await mangas.update(data,{
+    const result = await manga.update(data,{
         where:{
             id : mangaId 
         }
@@ -55,7 +52,7 @@ exports.updateManga = async (req,res) => {
 }
 exports.deleteManga = async (req,res) => {
     const mangaId = req.params.mangaId
-    const dataManga = await mangas.destroy({
+    const dataManga = await manga.destroy({
         where : {
             id:mangaId
         }
@@ -64,10 +61,11 @@ exports.deleteManga = async (req,res) => {
 }
 exports.myCreation = async (req,res) => {
     const userId = req.params.userId
-    const result = await mangas.findAll({
+    const result = await manga.findAll({
         where : {
             user_id:userId
         }
     })
     res.send(result)
 }
+

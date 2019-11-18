@@ -44,10 +44,10 @@ app.group('/readmanga', router => {
   router.get('/manga',mangaController.show)
   router.get('/manga/:mangaId',mangaController.getManga)
   router.get('/manga/search/:title',mangaController.searchManga)
-  router.post('/manga/add/user/:userId',mangaController.addManga)
+  router.post('/manga/add',upload.single('cover'),mangaController.addManga)
   router.put('/manga/update/:mangaId',mangaController.updateManga)
   router.delete('/manga/delete/:mangaId',mangaController.deleteManga)
-  router.get('/users/creation/:userId')
+  router.get('/manga/user/:userId',mangaController.myCreation)
 
   // Chapter API
   router.get('/chapter/:mangaId',chapterController.getChapter)

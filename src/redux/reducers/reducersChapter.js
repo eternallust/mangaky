@@ -26,6 +26,23 @@ const initialState = {
                 isError:true,
                 isLoading:false
             }
+        case `${types.DELETECHAPTER}_PENDING`:
+            return{
+                ...state,
+                isLoading: true
+            }
+        case `${types.DELETECHAPTER}_FULFILLED`:
+            return{
+                ...state,
+                isLoading: false,
+                isSuccess: true,
+            }
+        case `${types.DELETECHAPTER}_REJECTED`:
+            return{
+                ...state,
+                isError:true,
+                isLoading:false
+            }
         default :
             return state;
     }
